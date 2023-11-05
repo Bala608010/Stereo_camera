@@ -1,10 +1,8 @@
-% Load the stereo images
-image1 = imread('im1corrected.jpg');
-image2 = imread('im2corrected.jpg');
+a =   [1.327780000000000;
+   1.202180000000000;
+   1.350410000000000;
+   0.001000000000000];
 
-% Load the mocap data
-load('mocapPoints3D.mat');
+b = [-0.000844087349169,   0.000535659627718,   0.000024193185093,   0.731443055394400];
 
-% Load camera parameters
-load('Parameters_V1_1.mat');
-load('Parameters_V2_1.mat');
+b*a

@@ -13,8 +13,8 @@ load('Parameters_V1_1.mat');
 num_points = size(pts3D, 2);
 
 % Initialize arrays to store 2D points for all mocap points
-camera1_2D = zeros(2, num_points);
-camera2_2D = zeros(2, num_points);
+all_points_2D_camera1 = zeros(2, num_points);
+all_points_2D_camera2 = zeros(2, num_points);
 
 % Create figure for image 1
 figure;
@@ -32,7 +32,7 @@ for i = 1:num_points
     point_2D_camera1 = Kmat_mat * (Pmat_mat* point_3D);
     point_2D_camera1(1) = point_2D_camera1(1)/point_2D_camera1(3);
     point_2D_camera1(2) = point_2D_camera1(2)/point_2D_camera1(3);
-    camera1_2D(:, i) = point_2D_camera1(1:2);
+    all_points_2D_camera1(:, i) = point_2D_camera1(1:2);
 
     scatter(point_2D_camera1(1), point_2D_camera1(2), 'r', 'filled'); % Adjust marker size and color as needed
 end
@@ -57,10 +57,8 @@ for i = 1:num_points
     point_2D_camera2 = Kmat_mat * (Pmat_mat* point_3D);
     point_2D_camera2(1) = point_2D_camera2(1)/point_2D_camera2(3);
     point_2D_camera2(2) = point_2D_camera2(2)/point_2D_camera2(3);
-    camera2_2D(:, i) = point_2D_camera2(1:2);
+    all_points_2D_camera2(:, i) = point_2D_camera2(1:2);
 
-    scatter(point_2D_camera2(1), point_2D_camera2(2), 'r', 'filled'); % Adjust marker size and color as needed
+    scatter(point_2D_camera1(1), point_2D_camera1(2), 'r', 'filled'); % Adjust marker size and color as needed
 end
 
-
-save('all_2D_points.mat', 'camera1_2D', 'camera2_2D');
