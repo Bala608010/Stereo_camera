@@ -12,24 +12,16 @@ Pmat_mat = [Parameters.Pmat; [0, 0, 0, 1]];
 Kmat_mat = [Parameters.Kmat, [0,0,0]'];
 proj_mat_2 = Kmat_mat * Pmat_mat
 
-
 % Perform triangulation to recover 3D points
-worldPoints = triangulate(camera1_2D', camera2_2D', proj_mat_2, proj_mat_1);
+worldPoints = triangulate(camera1_2D', camera2_2D', proj_mat_1, proj_mat_2)
 
-worldPoints
-s
-
-%{
 % Load the mocap data
 load('mocapPoints3D.mat');
 
-
 % Calculate the squared errors between the computed 3D points and mocap data
-squared_errors = sum((worldPoints - mocapPoints3D).^2, 1);
+squared_errors = sum((worldPoints' - pts3D).^2, 1);
 
 % Compute the mean squared error (MSE)
 mean_squared_error = mean(squared_errors);
 
 fprintf('Mean Squared Error (MSE): %f\n', mean_squared_error);
-
-%}
