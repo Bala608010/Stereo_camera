@@ -10,23 +10,18 @@ im2 = imread('im2corrected.jpg');
 
 
 %run 8-point alg
-sx1 = camera1_2D(1, 1:8); y1 = camera1_2D(2, 1:8); 
+x1 = camera1_2D(1, 1:8); y1 = camera1_2D(2, 1:8); 
 x2 = camera2_2D(1, 1:8); y2 = camera2_2D(2, 1:8);
-sx1 = sx1; sy1 = y1; sx2 = x2; sy2 = y2;
-ux = mean(sx1);
-uy = mean(y1);
-stdxy = (std(sx1)+std(y1))/2;
-T1 = [1 0 -ux; 0 1 -uy; 0 0 stdxy]/stdxy;
-nx1 = (sx1-ux)/stdxy;
-ny1 = (y1-uy)/stdxy;
-ux = mean(x2);
-uy = mean(y2);
+sx1 = x1; sy1 = y1; sx2 = x2; sy2 = y2;
+stdxy = (std(x1)+std(y1))/2;
+T1 = [1 0 -mean(x1); 0 1 -mean(y1); 0 0 stdxy]/stdxy;
+nx1 = (x1-mean(x1))/stdxy;
+ny1 = (y1-mean(y1))/stdxy;
 stdxy = (std(x2)+std(y2))/2;
-T2 = [1 0 -ux; 0 1 -uy; 0 0 stdxy]/stdxy;
-nx2 = (x2-ux)/stdxy;
-ny2 = (y2-uy)/stdxy;
+T2 = [1 0 -mean(x2); 0 1 -mean(y2); 0 0 stdxy]/stdxy;
+nx2 = (x2-mean(x2))/stdxy;
+ny2 = (y2-mean(y2))/stdxy;
 
-nx1 = sx1; ny1 = y1; nx2 = x2; ny2 = y2;
 
 A = [];
 for i=1:length(nx1);
@@ -42,7 +37,7 @@ oldF = F;
 D(3,3) = 0;
 F = U * D * V';
 
-%F = T2' * F * T1;
+F = T2' * F * T1;
 
 save('Fundamental_matrix.mat', 'F');
 
