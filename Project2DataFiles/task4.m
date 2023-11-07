@@ -2,14 +2,14 @@ clear all
 clc
 
 
-% Load the 2D pixel locations from Task 1
-load('all_2D_points.mat'); % Assuming you have a file with the 39 2D pixel locations
+%Load 2D pixel locations from Task 1
+load('all_2D_points.mat'); %file has 39 2D pixel locations
 
 im = imread('im1corrected.jpg');
 im2 = imread('im2corrected.jpg');
 
 
-%run 8-point alg
+%run 8-point algorithm
 x1 = camera1_2D(1, 1:8); y1 = camera1_2D(2, 1:8); 
 x2 = camera2_2D(1, 1:8); y2 = camera2_2D(2, 1:8);
 sx1 = x1; sy1 = y1; sx2 = x2; sy2 = y2;
