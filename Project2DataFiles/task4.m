@@ -1,3 +1,7 @@
+clear all
+clc
+
+
 % Load the 2D pixel locations from Task 1
 load('all_2D_points.mat'); % Assuming you have a file with the 39 2D pixel locations
 

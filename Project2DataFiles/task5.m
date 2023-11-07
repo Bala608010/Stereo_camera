@@ -1,3 +1,6 @@
+clear all
+clc
+
 % Load your Fundamental Matrix (F) from the previous task
 load('Fundamental_matrix.mat');
 

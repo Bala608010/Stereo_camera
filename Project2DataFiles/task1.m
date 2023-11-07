@@ -1,3 +1,6 @@
+clear all
+clc
+
 % Load the stereo images
 image1 = imread('im1corrected.jpg');
 image2 = imread('im2corrected.jpg');
