@@ -9,30 +9,30 @@ im = imread('im1corrected.jpg');
 im2 = imread('im2corrected.jpg');
 
 
-%do Hartley preconditioning
-x1 = camera1_2D(1, 1:8); y1 = camera1_2D(2, 1:8); 
+%run 8-point alg
+sx1 = camera1_2D(1, 1:8); y1 = camera1_2D(2, 1:8); 
 x2 = camera2_2D(1, 1:8); y2 = camera2_2D(2, 1:8);
-savx1 = x1; savy1 = y1; savx2 = x2; savy2 = y2;
-mux = mean(x1);
-muy = mean(y1);
-stdxy = (std(x1)+std(y1))/2;
-T1 = [1 0 -mux; 0 1 -muy; 0 0 stdxy]/stdxy;
-nx1 = (x1-mux)/stdxy;
-ny1 = (y1-muy)/stdxy;
-mux = mean(x2);
-muy = mean(y2);
+sx1 = sx1; sy1 = y1; sx2 = x2; sy2 = y2;
+ux = mean(sx1);
+uy = mean(y1);
+stdxy = (std(sx1)+std(y1))/2;
+T1 = [1 0 -ux; 0 1 -uy; 0 0 stdxy]/stdxy;
+nx1 = (sx1-ux)/stdxy;
+ny1 = (y1-uy)/stdxy;
+ux = mean(x2);
+uy = mean(y2);
 stdxy = (std(x2)+std(y2))/2;
-T2 = [1 0 -mux; 0 1 -muy; 0 0 stdxy]/stdxy;
-nx2 = (x2-mux)/stdxy;
-ny2 = (y2-muy)/stdxy;
+T2 = [1 0 -ux; 0 1 -uy; 0 0 stdxy]/stdxy;
+nx2 = (x2-ux)/stdxy;
+ny2 = (y2-uy)/stdxy;
 
-nx1 = x1; ny1 = y1; nx2 = x2; ny2 = y2;
+nx1 = sx1; ny1 = y1; nx2 = x2; ny2 = y2;
 
 A = [];
 for i=1:length(nx1);
     A(i,:) = [nx1(i)*nx2(i) nx1(i)*ny2(i) nx1(i) ny1(i)*nx2(i) ny1(i)*ny2(i) ny1(i) nx2(i) ny2(i) 1];
 end
-%get eigenvector associated with smallest eigenvalue of A' * A
+%get eig-vector for smallest eig-value of A' * A
 [u,d] = eigs(A' * A,1,'SM');
 F = reshape(u,3,3);
 
@@ -42,34 +42,33 @@ oldF = F;
 D(3,3) = 0;
 F = U * D * V';
 
-%unnormalize F to undo the effects of Hartley preconditioning
 %F = T2' * F * T1;
 
 save('Fundamental_matrix.mat', 'F');
 
 colors =  'bgrcmykbgrcmykbgrcmykbgrcmykbgrcmykbgrcmykbgrcmyk';
 %overlay epipolar lines on im2
-L = F * [x1 ; y1; ones(size(x1))];
+L = F * [sx1 ; y1; ones(size(sx1))];
 [nr,nc,nb] = size(im2);
 figure(2); clf; imagesc(im2); axis image;
 hold on; plot(x2,y2,'*'); hold off
 for i=1:length(L)
     a = L(1,i); b = L(2,i); c=L(3,i);
     if (abs(a) > (abs(b)))
-       ylo=0; yhi=nr; 
-       xlo = (-b * ylo - c) / a;
-       xhi = (-b * yhi - c) / a;
+       yl=0; yh=nr; 
+       xl = (-b * yl - c) / a;
+       xh = (-b * yh - c) / a;
        hold on
-       h=plot([xlo; xhi],[ylo; yhi]);
+       h=plot([xl; xh],[yl; yh]);
        set(h,'Color',colors(i),'LineWidth',2);
        hold off
        drawnow;
     else
-       xlo=0; xhi=nc; 
-       ylo = (-a * xlo - c) / b;
-       yhi = (-a * xhi - c) / b;
+       xl=0; xh=nc; 
+       yl = (-a * xl - c) / b;
+       yh = (-a * xh - c) / b;
        hold on
-       h=plot([xlo; xhi],[ylo; yhi],'b');
+       h=plot([xl; xh],[yl; yh],'b');
        set(h,'Color',colors(i),'LineWidth',2);
        hold off
        drawnow;
@@ -81,24 +80,24 @@ end
 L = ([x2 ; y2; ones(size(x2))]' * F)' ;
 [nr,nc,nb] = size(im);
 figure(1); clf; imagesc(im); axis image;
-hold on; plot(x1,y1,'*'); hold off
+hold on; plot(sx1,y1,'*'); hold off
 for i=1:length(L)
     a = L(1,i); b = L(2,i); c=L(3,i);
     if (abs(a) > (abs(b)))
-       ylo=0; yhi=nr; 
-       xlo = (-b * ylo - c) / a;
-       xhi = (-b * yhi - c) / a;
+       yl=0; yh=nr; 
+       xl = (-b * yl - c) / a;
+       xh = (-b * yh - c) / a;
        hold on
-       h=plot([xlo; xhi],[ylo; yhi],'b');
+       h=plot([xl; xh],[yl; yh],'b');
        set(h,'Color',colors(i),'LineWidth',2);
        hold off
        drawnow;
     else
-       xlo=0; xhi=nc; 
-       ylo = (-a * xlo - c) / b;
-       yhi = (-a * xhi - c) / b;
+       xl=0; xh=nc; 
+       yl = (-a * xl - c) / b;
+       yh = (-a * xh - c) / b;
        hold on
-       h=plot([xlo; xhi],[ylo; yhi],'b');
+       h=plot([xl; xh],[yl; yh],'b');
        set(h,'Color',colors(i),'LineWidth',2);
        hold off
        drawnow;
